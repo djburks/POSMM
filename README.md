@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/posmm.svg" width="500" title="POSMM Logo"></p>
+
 # POSMM
 Python-Optimized Single-Order Markov Model 
 Metagenomic Read Classifier for GNU/Linux
