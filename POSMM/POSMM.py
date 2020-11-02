@@ -15,7 +15,9 @@ import sys
 
 insdir = os.path.expanduser('~/POSMM/')
 os.system('mkdir -p ' + insdir)
-tmpdir = tempfile.mkdtemp(dir=insdir)
+os.system('rm -rf ' + insdir + 'tmp/')
+os.system('mkdir -p ' + insdir + 'tmp/')
+tmpdir = tempfile.mkdtemp(dir=insdir+'tmp/')
 smm = insdir + '/smm'
 smmsource = pkg_resources.resource_filename('POSMM','posmmsource/smm.cpp')
 
@@ -35,7 +37,7 @@ def linLoad():
 			lines = lines.rstrip()
 			values = lines.split(',')
 			taxid = values[0]
-			taxid = taxid.split('.fna')[0]
+			taxid = taxid.split('.')[0]
 			lineage = values[1:9]
 			lin[taxid] = lineage
 	return lin
@@ -112,7 +114,7 @@ def topResults():
 						grez[lc] = values[1]
 					lc += 1
 		for x in range(len(grez)):
-			outfile.write(str(srez[x]) + '\t' + (grez[x].split('/')[-1]).split('.fna')[0] + '\n')
+			outfile.write(str(srez[x]) + '\t' + (grez[x].split('/')[-1]).split('.')[0] + '\n')
 		outfile.close()
 			
 	
@@ -214,7 +216,18 @@ def confFinalOut(cpu,outfile):
 			print('ERROR: Mismatch Results from Split.  Abort')
 			sys.exit()
 	a.close()
-			
+		
+def taxLoad(taxmap):
+	print('Generating custom taxmap from %s'%(taxmap))
+	try:
+		taxlist = []
+		with open(taxmap) as infile:
+			for lines in infile:
+				taxlist.append(lines.rstrip())
+		return taxlist	
+	except OSError:
+		print('Problem with custom taxmap file.  Exiting...')
+		sys.exit()
 
 def main():
 	# Set up arguments
@@ -227,8 +240,9 @@ def main():
 	parser.add_argument('--threads','-t',type=int,default=len(os.sched_getaffinity(0)),help='Set to number of desired threads.  Default uses all available.  Currently Reported: ' + str(len(os.sched_getaffinity(0))))
 	parser.add_argument('--fasta','-f',type=str,help='Input Metagenomic Fasta File.')
 	parser.add_argument('--gdir','-gd',type=str,help='Location of default genome and taxmap directory if using setup mode.  Defaults to ~/POSMM/Genomes',default='~/POSMM/Genomes')
-	parser.add_argument('--gtype','-gt',type=str,help='Type of RefSeq genome to download.  Default is reference',choices=['reference','representative'],default='reference')
+	parser.add_argument('--gtype','-gt',type=str,help='Type of RefSeq genome to download.  Default is reference',choices=['reference','representative','custom'],default='reference')
 	parser.add_argument('--output','-out',type=str,help='Output file name')
+	parser.add_argument('--taxlist','-tx',type=str,default=insdir+'taxmap.txt',help='Location of taxmap (List of prokaryotic Refseq GCF accessions, one per line) to build database from when using --runmode setup and --gtype custom. Default is ~/POSMM/taxmap.txt.')
 	
 
 
@@ -264,18 +278,28 @@ def main():
 		jdf = open(os.path.expanduser(linjsonfile),'w')
 		json.dump(lin,jdf)
 		jdf.close()
+		taxmap = []
+		if args.gtype == 'custom':
+			taxmap = taxLoad(args.taxlist)
 		with open('%s/assembly_summary_refseq.txt' %(tmpdir)) as infile:
 			for lines in infile:
 				if lines.startswith('#'):
 					continue
 				values = lines.split('\t')
-				if values[4] != (args.gtype + ' genome'):
-					continue
-				else:
+				if args.gtype == 'custom':
 					taxid = values[5]
-					if (lin[taxid][0] == 'Bacteria') or (lin[taxid][0] == 'Archaea'):
+					gcf = values[0]
+					if gcf in taxmap:
 						link = values[19]
+						os.system('wget ' + link + '/' + link.split('/')[-1] + '_genomic.fna.gz' + ' -O ' + os.path.expanduser(args.gdir) + '/' + taxid + '.' + gcf + '.fna.gz')
+	
+				else:
+					if values[4] != (args.gtype + ' genome'):
+						continue
+					else:
+						taxid = values[5]
 						os.system('wget ' + link + '/' + link.split('/')[-1] + '_genomic.fna.gz' + ' -O ' + os.path.expanduser(args.gdir) + '/' + taxid + '.fna.gz')
+						
 		os.system('gunzip -f ' + os.path.expanduser(args.gdir) + '/*.gz')
 	else:
 		print('Loading lineage from JSON')
