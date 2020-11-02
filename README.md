@@ -72,7 +72,14 @@ POSMM is heavily CPU-bound, and will use 100% of the CPU if you let it.  As such
 
 Output is a tab-delimited file of taxa and confidence score pairs, separated by ":::". 
 Given the size of metagenomic datasets, output is kept as minimal as possible.  The line number corresponds to the read order of the original metagenomic fasta file.
+You can also export a list of taxonomic assignments and the raw Markov model score with --runmode raw.
 
 ## Notes on Confidence Scores
 
 Confidence scores help avoid false-positive classifications inherent to Markov model methods of classification.  As a general rule, we recommend using a cutoff >0.50 for your own analysis.  Using a cutoff of 0.25 is similar to using no cutoff, as this will remove obvious false-positives such as assignment of human contaminant reads to bacterial genomes.  Think of this like using Kraken without a --confidence cutoff. The reliability of using low (i.e. < 0.5) cutoffs depends on the representative quality of your genome set.  
+
+## Future Updates
+POSMM is far from fully evolved.  Some of the upcoming plans include:
+- Custom (Non-RefSeq) Genome Set Support
+- More Output Options 
+- PyPI Integration / Conda Packages
