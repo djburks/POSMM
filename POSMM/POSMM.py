@@ -25,7 +25,7 @@ smmsource = pkg_resources.resource_filename('POSMM','posmmsource/smm.cpp')
 
 if os.path.isfile(smm) == False:
 	print('SMM not found.  Compiling SMM')
-	os.system('g++ -Ofast ' + smmsource + ' -o ' + smm)
+	os.system('g++ -Ofast -std=c++11 ' + smmsource + ' -o ' + smm)
 	
 os.system('mkdir -p ' + tmpdir)
 
