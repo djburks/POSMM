@@ -76,7 +76,7 @@ You can also export a list of taxonomic assignments and the raw Markov model sco
 
 ## Notes on Confidence Scores
 
-Confidence scores help avoid false-positive classifications inherent to Markov model methods of classification.  As a general rule, we recommend using a cutoff >0.50 for your own analysis.  Using a cutoff of 0.25 is similar to using no cutoff, as this will remove obvious false-positives such as assignment of human contaminant reads to bacterial genomes.  Think of this like using Kraken without a --confidence cutoff. The reliability of using low (i.e. < 0.5) cutoffs depends on the representative quality of your genome set.  
+Confidence scores help avoid false-positive classifications inherent to Markov model methods of classification.  As a general rule, we recommend using a cutoff >0.50 for your own analysis.  Using a cutoff of 0.25 is similar to using no cutoff, as this will remove obvious false-positives such as assignment of human contaminant reads to bacterial genomes.  Think of this like using Kraken without a --confidence cutoff. The reliability of using low (i.e. < 0.5) cutoffs depends on the representative quality of your genome set, just as it would with an exact k-mer matching classifier based upon LCA.  
 
 ## Future Updates
 POSMM is far from fully evolved.  Some of the upcoming plans include:
