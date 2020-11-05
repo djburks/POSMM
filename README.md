@@ -32,11 +32,11 @@ POSMM -h
 ```
 
 ## Setting up Genome Sets
-### Building a Quick-Setup Genome Set from RefSeq
+### Building a Standard Genome Set from RefSeq
 
-Before analyzing reads, you need to set up at least one set of genomes for POSMM.  By using the setup runmode, you can specify whether you would like to download all available prokaryotic reference or representative genomes.  By default, genome sets are written to ~/POSMM/Genomes, but this can be changed with the --gdir parameter.
+Before analyzing reads, you need to set up at least one set of genomes for POSMM.  By using the setup runmode, you can specify whether you would like to download a standard set or use a custom list.  Standard sets find all unique species currently in RefSeq, and attempts to download the highest quality full genome based on RefSeq categories.
 ```
-POSMM --runmode setup --gtype reference --gdir ~/POSMM/Reference_Genomes
+POSMM --runmode setup --gtype bacteria --gdir ~/POSMM/bacteria
 ```
 ### Building a Custom Genome Set from RefSeq
 By providing POSMM with a list of GCF numbers, you can control which genomes are pulled from RefSeq.  This can be useful if an upstream classifier narrows down a set of reads to a particular taxonomic group (phylum, class, etc), or if you only care about isolating reads to a specific set of organisms.
