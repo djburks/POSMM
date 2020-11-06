@@ -278,7 +278,7 @@ def main():
 	parser.add_argument('--threads','-t',type=int,default=len(os.sched_getaffinity(0)),help='Set to number of desired threads.  Default uses all available.  Currently Reported: ' + str(len(os.sched_getaffinity(0))))
 	parser.add_argument('--fasta','-f',type=str,help='Input Metagenomic Fasta File.')
 	parser.add_argument('--gdir','-gd',type=str,help='Location of default genome and taxmap directory if using setup mode.  Defaults to ~/POSMM/Genomes',default='~/POSMM/Genomes')
-	parser.add_argument('--gtype','-gt',type=str,help='Type of RefSeq genome set tp download.  Default is bacteria, which attempts to download the highest quality genome for all bacterial species.',choices=['bacteria','custom'],default='bacteria')
+	parser.add_argument('--gtype','-gt',type=str,help='Type of RefSeq genome set to download.  Default is bacteria, which attempts to download the highest quality genome for all unique bacterial species.',choices=['bacteria','virus','archaea','custom'],default='bacteria')
 	parser.add_argument('--output','-out',type=str,help='Output file name')
 	parser.add_argument('--taxlist','-tx',type=str,default=insdir+'taxmap.txt',help='Location of taxmap (List of prokaryotic Refseq GCF accessions, one per line) to build database from when using --runmode setup and --gtype custom. Default is ~/POSMM/taxmap.txt.')
 	
@@ -322,6 +322,13 @@ def main():
 			taxmap = taxLoad(args.taxlist)
 		elif args.gtype == 'bacteria':
 			taxmap = taxLoadBest('Bacteria',lin,tmpdir+'/assembly_summary_refseq.txt')
+		elif args.gtype == 'virus':
+			taxmap = taxLoadBest('Viruses',lin,tmpdir+'/assembly_summary_refseq.txt')
+		elif args.gtype == 'archaea':
+			taxmap = taxLoadBest('Archaea',lin,tmpdir+'/assembly_summary_refseq.txt')
+		else:
+			print('Invalid Library Type (GTYPE ERROR)')
+			sys.exit()
 		with open('%s/assembly_summary_refseq.txt' %(tmpdir)) as infile:
 			for lines in infile:
 				if lines.startswith('#'):
