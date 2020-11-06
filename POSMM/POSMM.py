@@ -262,8 +262,8 @@ def taxLoadBest(domain,lin,afile):
 	print('Building taxlist')
 	for s in specs:
 		taxlist.append(specs[s][1])
-		print(s)
-		print(specs[s][1])
+		#print(s)
+		#print(specs[s][1])
 	return taxlist
 	
 
@@ -334,18 +334,11 @@ def main():
 				if lines.startswith('#'):
 					continue
 				values = lines.split('\t')
-				if args.gtype == 'custom':
-					taxid = values[5]
-					gcf = values[0]
-					if gcf in taxmap:
-						link = values[19]
-						os.system('wget ' + link + '/' + link.split('/')[-1] + '_genomic.fna.gz' + ' -O ' + os.path.expanduser(args.gdir) + '/' + taxid + '.' + gcf + '.fna.gz')
-				elif args.gtype == 'bacteria':
-					taxid = values[5]
-					gcf = values[0]
-					if gcf in taxmap:
-						link = values[19]
-						os.system('wget ' + link + '/' + link.split('/')[-1] + '_genomic.fna.gz' + ' -O ' + os.path.expanduser(args.gdir) + '/' + taxid + '.' + gcf + '.fna.gz')
+				taxid = values[5]
+				gcf = values[0]
+				if gcf in taxmap:
+					link = values[19]
+					os.system('wget ' + link + '/' + link.split('/')[-1] + '_genomic.fna.gz' + ' -O ' + os.path.expanduser(args.gdir) + '/' + taxid + '.' + gcf + '.fna.gz')
 		os.system('gunzip -f ' + os.path.expanduser(args.gdir) + '/*.gz')
 	else:
 		print('Loading lineage from JSON')
