@@ -13,6 +13,8 @@ Download the POSMM-1.0.tar.gz archive from the dist folder, and simply install w
 Dependencies are taken care of by pip, but you will need a relatively modern GCC version for compiling SMM.
 
 ```
+python3 setup.py sdist
+cd dist
 pip install POSMM-1.0.tar.gz
 ```
 ## Features
