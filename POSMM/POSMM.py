@@ -90,8 +90,8 @@ def cmdFling(cmd):
 def topResults():
 	grez = []
 	srez = []
-	outfile = open('%s/ALL.markov'%(tmpdir),'w')
 	resultfiles = glob.glob('%s/*.markov'%(tmpdir))
+	outfile = open('%s/ALL.markov'%(tmpdir),'w')
 	if len(resultfiles) == 1:
 		with open(resultfiles[0]) as infile:
 			for lines in infile:
